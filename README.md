@@ -60,14 +60,15 @@ then `cd` to this workspace
 
 ### Reproduced NLI
 
- | Train | Test
+| ERM\IRM | Train | Test (o.o.d) |
+| --- | --- | --- |
+| ERM | 85.4 | 0.0 |
+| IRM | 75.42 | 100.0 |
 
----
-
-ERM | approx. 85.4 | 0.0 |
-
-IRM | 75.42 | 100.0 |
-
----
 
 ### Hate Speeech
+
+| ERM\IRM | Train | Test (o.o.d) |
+| --- | --- | --- |
+| ERM |  |  |
+| IRM |  |  |
