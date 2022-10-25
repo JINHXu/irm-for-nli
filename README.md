@@ -40,3 +40,34 @@ Assume, **for example**, we want to reproduce the results for the bias prevalenc
 <br />Then, from the `natural_bias/reproduce` directory, run the `natural_bias/reproduce/reproduce_results.py` file *to produce the relevant figure* (comment out all the unecessary figures and tables). 
 
   **Important Note:**   Before testing the models update the directories in the `run_commands.txt` file accordingly, i.e., replace `/home/yanadr/irm_for_nli_submission/` with the path to your root directory.
+
+---
+
+## Env prep
+
+run `conda env export --no-builds > /Users/xujinghua/irm-for-nli/environment.yml` to fit to my OS (and change prefix)
+
+run `conda env create -f /Users/xujinghua/irm-for-nli/environment.yml` to create virtual env
+
+run `conda activate /Users/xujinghua/miniconda3/envs/irm-for-nli` to activate virtual env
+
+`chmod +x` executables (with permission denied)
+
+then `cd` to this workspace
+
+
+## Toy Example
+
+### Reproduced NLI
+
+ | Train | Test
+
+---
+
+ERM | approx. 85.4 | 0.0 |
+
+IRM | 75.42 | 100.0 |
+
+---
+
+### Hate Speeech
