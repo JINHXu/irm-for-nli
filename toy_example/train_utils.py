@@ -239,12 +239,12 @@ class Trainer(abc.ABC):
                 post_epoch_fn(step, train_result, test_result, verbose)
 
         ans_warm_up = actual_num_warm_up_steps if actual_num_warm_up_steps is not None else warm_up_steps
-        if irm_steps and irm_reg:
-            fig = plot_predictions(unique_samples_predictions, ans_warm_up)
-        else:
-            fig = plot_predictions(unique_samples_predictions)
-        writer.add_figure('Model Predictions', fig)
-        fig.savefig(f'{os.path.sep.join([checkpoint_dir, "model_predictions"])}.png')
+        # if irm_steps and irm_reg:
+        #     fig = plot_predictions(unique_samples_predictions, ans_warm_up)
+        # else:
+        #     fig = plot_predictions(unique_samples_predictions)
+        # writer.add_figure('Model Predictions', fig)
+        # fig.savefig(f'{os.path.sep.join([checkpoint_dir, "model_predictions"])}.png')
         return FitResult(num_warm_up_steps=ans_warm_up, num_steps=actual_num_steps,
                          train_loss=train_loss, train_error=train_error, train_penalty=train_penalty,
                          train_acc=train_acc,
@@ -271,9 +271,9 @@ class Trainer(abc.ABC):
             unique_samples_predictions = dict([(samp, []) for samp in unique_samples])
 
         for ind, samp in zip(unique_samples_ind, unique_samples):
-            p, h, y = ds[ind]
+            x, y = ds[ind]
             with torch.no_grad():
-                logits, _ = self.model((p.unsqueeze(0).to(self.device), h.unsqueeze(0).to(self.device)))
+                logits, _ = self.model(x.unsqueeze(0).to(self.device))
                 if self.model.output_dim == 2:
                     pred = torch.nn.functional.softmax(logits.detach().to('cpu'), dim=-1)[:, 1].item()
                 else:
@@ -409,10 +409,10 @@ class IRMTrainer(Trainer):
         loss_func = self.loss_fn
 
         for batch_e in batch:
-            p, h, y = batch_e  # p: tensor of shape batch x 1, h: tensor of shape batch x 2, y: tensor of shape batch
+            x, y = batch_e  # p: tensor of shape batch x 1, h: tensor of shape batch x 2, y: tensor of shape batch
             y = y.to(self.device)
 
-            logits, _ = self.model((p.to(self.device), h.to(self.device)))
+            logits, _ = self.model((x.to(self.device)))
 
             if self.model.output_dim == 2:
                 error = loss_func(logits, y)
@@ -457,10 +457,10 @@ class IRMTrainer(Trainer):
 
         for batch_e in batch:
             with torch.no_grad():
-                p, h, y = batch_e  # p: tensor of shape batch x 1, h: tensor of shape batch x 2, y: tensor of shape batch
+                x, y = batch_e  # p: tensor of shape batch x 1, h: tensor of shape batch x 2, y: tensor of shape batch
                 y = y.to(self.device)
 
-                logits, _ = self.model((p.to(self.device), h.to(self.device)))
+                logits, _ = self.model(x.to(self.device))
 
             if self.model.output_dim == 2:
                 error = loss_func(logits, y)

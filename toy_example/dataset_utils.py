@@ -17,17 +17,17 @@ class NLIDataset(Dataset):
         self.num_samples = num_samples  # list of tuples of shape (p, h, y). p, h are strings, y is integer
         self.noise = noise
         self.samples = self._initialize_dataset(biased_samples_ratio=biased_samples_ratio, prob=prob, rng=rng)
-        self.stats_counts, self.stats_cond_prob = self._get_bias_stats()
+        # self.stats_counts, self.stats_cond_prob = self._get_bias_stats()
 
     def __getitem__(self, idx):
-        p, h, y = self.samples[idx]
+        x, y = self.samples[idx]
         # tokenize
-        p = [VOCAB.index(pp) for pp in p.split()]
-        h = [VOCAB.index(hh) for hh in h.split()]
+        x = [VOCAB.index(xx) for xx in x.split()]
+        # h = [VOCAB.index(hh) for hh in h.split()]
         # if no bias appended to hypothesis - pad (to enable batching)
-        if len(h) == 1:
-            h.append(len(VOCAB))
-        return torch.tensor(p, dtype=torch.long), torch.tensor(h, dtype=torch.long), torch.tensor(y)
+        if len(x) == 1:
+            x.append(len(VOCAB))
+        return torch.tensor(x, dtype=torch.long), torch.tensor(y)
 
     def __len__(self):
         return self.num_samples
@@ -45,12 +45,13 @@ class NLIDataset(Dataset):
         p = rng.choice(VOCAB_SIG, self.num_samples)
         h = rng.choice(VOCAB_SIG, self.num_samples)
         labels = p == h
+        # add noise
         flip = rng.rand(self.num_samples) < self.noise
         labels = np.logical_xor(flip, labels).astype(np.int8).tolist()  # num_samples
         samples_text = np.vstack([p, h]).transpose(1, 0).tolist()  # num_samples x 2
         samples = list(zip(*[samples_text, labels]))
         samples = [(p, h, y) for [p, h], y in samples]
-
+        # samples = [(p + h, y) for [p, h], y in samples]
         return samples
 
     def _add_bias(self, samples, biased_samples_ratio, prob, rng):
@@ -87,7 +88,8 @@ class NLIDataset(Dataset):
                     else:
                         bias_idx = (bias_indices[:label] + bias_indices[label+1:])[1]
 
-                    samp = p, h + ' ' + VOCAB_BIAS[bias_idx], y
+                    # samp = p, h + ' ' + VOCAB_BIAS[bias_idx], y
+                    samp = p + ' ' + h + ' ' + VOCAB_BIAS[bias_idx], y
                     filtered_samples[indices[i]] = samp
                 new_samples += filtered_samples
         else:
@@ -110,7 +112,8 @@ class NLIDataset(Dataset):
                     else:
                         bias_idx = (bias_indices[:label] + bias_indices[label+1:])[1]
 
-                    samp = p, h + ' ' + VOCAB_BIAS[bias_idx], y
+                    # samp = p, h + ' ' + VOCAB_BIAS[bias_idx], y
+                    samp = p + ' ' + h + ' ' + VOCAB_BIAS[bias_idx], y
                     filtered_samples[indices[i]] = samp
                 new_samples += filtered_samples
 
@@ -138,3 +141,9 @@ class NLIDataset(Dataset):
                                     columns=[x for x in VOCAB_BIAS])
 
         return instance_counts, instance_probs
+
+    # def main():
+    #     samples = _generate_samples()
+
+    # if __name__ == "__main__":
+    #     main()

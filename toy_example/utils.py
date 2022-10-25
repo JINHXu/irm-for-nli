@@ -161,36 +161,39 @@ def wrap_confusion_matrix(num_labels, y_gt, y_pred, weights=None):
     finally:
         pass
 
+################################################################################################################
+############################################ to be updated ##################################################
+################################################################################################################
 
-def plot_predictions(samples_pred_dict, xticks_sep=None):
-    # label doesn't affect predictions - leave samples with correct label for plotting
-    true_signal_combinations = list(it.product(setting.VOCAB_SIG, setting.VOCAB_SIG))
-    color_per_true_signal = dict(zip(true_signal_combinations, ['b', 'r', 'y', 'g']))
-    line_type_per_bias_signal = dict(zip(setting.VOCAB_BIAS, ['-', '--']))
+# def plot_predictions(samples_pred_dict, xticks_sep=None):
+#     # label doesn't affect predictions - leave samples with correct label for plotting
+#     true_signal_combinations = list(it.product(setting.VOCAB_SIG, setting.VOCAB_SIG))
+#     color_per_true_signal = dict(zip(true_signal_combinations, ['b', 'r', 'y', 'g']))
+#     line_type_per_bias_signal = dict(zip(setting.VOCAB_BIAS, ['-', '--']))
 
-    unlabeled_samples = set(map(lambda x: x[:-1],list(samples_pred_dict)))
-    gt_labeled_samp_pred_dict = dict()
-    for samp in unlabeled_samples:
-        p, h = samp
-        assert samples_pred_dict[p, h, 0] == samples_pred_dict[p, h, 1], "Different predictions for same sample"
-        y_gt = int(p.split()[0] == h.split()[0])
-        gt_labeled_samp_pred_dict[(p, h, y_gt)] = samples_pred_dict[(p, h, 0)]
+#     unlabeled_samples = set(map(lambda x: x[:-1],list(samples_pred_dict)))
+#     gt_labeled_samp_pred_dict = dict()
+#     for samp in unlabeled_samples:
+#         # p, h = samp
+#         assert samples_pred_dict[samp, 0] == samples_pred_dict[samp, 1], "Different predictions for same sample"
+#         y_gt = int(samp.split()[0] == samp.split()[1])
+#         gt_labeled_samp_pred_dict[(samp, y_gt)] = samples_pred_dict[(samp, 0)]
 
-    fig, axes = plt.subplots(nrows=2, figsize=(10, 12), dpi=240)
-    for lbl in range(setting.NUM_LABELS):
-        for (p, h, y_gt), pred in gt_labeled_samp_pred_dict.items():
-            if y_gt == lbl:
-                axes[lbl].plot(pred, label=f'{p}, {h}', color=color_per_true_signal[(p, h[0])], linestyle=line_type_per_bias_signal[h[-1]])
-        axes[lbl].set_ylabel(f'probability of entailment', fontsize=18, labelpad=10.0)
-        axes[lbl].set_xlabel(f'Steps', fontsize=18, labelpad=10.0)
-        axes[lbl].set_xticklabels(axes[lbl].get_xticks().astype(int), fontsize=16)
-        axes[lbl].set_yticklabels(np.around(axes[lbl].get_yticks().astype(float), decimals=2), fontsize=16)
-        axes[lbl].legend(fontsize=18)
-        if xticks_sep is not None:
-            axes[lbl].axvline(x=xticks_sep, ymin=0, ymax=1, color='k', linewidth=2.5)
+#     fig, axes = plt.subplots(nrows=2, figsize=(10, 12), dpi=240)
+#     for lbl in range(setting.NUM_LABELS):
+#         for (x, y_gt), pred in gt_labeled_samp_pred_dict.items():
+#             if y_gt == lbl:
+#                 axes[lbl].plot(pred, label=f'{x}', color=color_per_true_signal[(p, h[0])], linestyle=line_type_per_bias_signal[h[-1]])
+#         axes[lbl].set_ylabel(f'probability of entailment', fontsize=18, labelpad=10.0)
+#         axes[lbl].set_xlabel(f'Steps', fontsize=18, labelpad=10.0)
+#         axes[lbl].set_xticklabels(axes[lbl].get_xticks().astype(int), fontsize=16)
+#         axes[lbl].set_yticklabels(np.around(axes[lbl].get_yticks().astype(float), decimals=2), fontsize=16)
+#         axes[lbl].legend(fontsize=18)
+#         if xticks_sep is not None:
+#             axes[lbl].axvline(x=xticks_sep, ymin=0, ymax=1, color='k', linewidth=2.5)
 
-    for lbl, ax in enumerate(axes):
-        ax.set_title(f'gold label: {setting.labels_int_to_string(lbl)}', size=24, pad=14)
-    fig.tight_layout(pad=3.0)
+#     for lbl, ax in enumerate(axes):
+#         ax.set_title(f'gold label: {setting.labels_int_to_string(lbl)}', size=24, pad=14)
+#     fig.tight_layout(pad=3.0)
 
-    return fig
+#     return fig

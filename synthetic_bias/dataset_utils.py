@@ -78,8 +78,8 @@ class NLIDatasetComplexBiasPattern(Dataset):
 
     def __getitem__(self, idx):
         samp = self.samples[idx]
-        p, h, y = samp
-        return p, h, torch.tensor(settings.labels_string_to_int(
+        x, y = samp
+        return x, torch.tensor(settings.labels_string_to_int(
             y))  # p,h are returned as strings. Will be tokenized in training process (in batches)
 
     def __len__(self):
