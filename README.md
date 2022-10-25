@@ -53,7 +53,7 @@ run `conda activate /Users/xujinghua/miniconda3/envs/irm-for-nli` to activate vi
 
 `chmod +x` executables (with permission denied)
 
-then `cd` to this workspace
+then `cd` to the workspace `toy_example/synthetic_bias/natural_bias`
 
 
 ## Toy Example
