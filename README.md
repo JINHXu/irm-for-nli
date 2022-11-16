@@ -41,6 +41,12 @@ Counter({('a b c', 0): 2052, ('b a c', 0): 1997, ('a a d', 1): 1982, ('b b d', 1
 Counter({('b b d', 1): 2281, ('b a c', 0): 2252, ('a a d', 1): 2234, ('a b c', 0): 2232, ('b b c', 1): 256, ('a b d', 0): 255, ('a a c', 1): 246, ('b a d', 0): 244})
 ```
 
+test data o.o.d. setup:
+
+* bias stregnth (prob label given bias): p = 0.0 _training data have high p_
+
+* bias prevalence (ratio of biased samples): alpha1 = alpha2 = 1.0 _training data have the same alph_
+
 ### NLI test data
 
 
