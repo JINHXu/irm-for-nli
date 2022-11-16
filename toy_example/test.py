@@ -12,6 +12,7 @@ biased_samples_ratio=1.0
 env_prob=0.0
 bs_test=32
 
+
 # d = NLIDataset(1000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=env_prob, rng=rng)
 
 # samples = d._generate_samples(rng = np.random.RandomState())
@@ -35,7 +36,7 @@ bs_test=32
 
 # print(dl_train)
 
-ds_test = NLIDataset(1000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=env_prob, rng=rng)
+ds_test = NLIDataset(10000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=env_prob, rng=rng)
 # dl_test = [DataLoader(ds_test, batch_size=bs_test)]
 
 print(ds_test.samples)
