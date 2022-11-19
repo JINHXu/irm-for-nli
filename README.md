@@ -1,3 +1,7 @@
+## Resources
+
+* [Supplementary material](https://proceedings.neurips.cc/paper/2021/file/972cda1e62b72640cb7ac702714a115f-Supplemental.pdf)
+
 ## Env prep
 
 run `conda env export --no-builds > /Users/xujinghua/irm-for-nli/environment.yml` to fit to my OS (and change prefix)
@@ -176,4 +180,4 @@ Counter({
 | ERM | 84.82 | 0.0 |
 | IRM | 79.24 | 79.2 |
 
-* altered MLP to adapt to data: double the size of input embeddings and hidden size
+* altered MLP for data adaption
