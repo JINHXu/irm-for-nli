@@ -165,3 +165,24 @@ Counter({
 | IRM | 79.24 | 79.2 |
 
 * altered MLP for data adaption
+
+| ERM\IRM | Train | Test (o.o.d) |
+| --- | --- | --- |
+| ERM |  |  |
+| IRM |  |  |
+
+## Synthetic Bias
+
+### ORG setup
+
+* __HYPOTHESIS BIAS__: SNLI data with <c>, <e>, and <n> prepended for contradiction, entailment, and neutral
+
+* BERT model
+
+* two training envs: `α1 = α2 = 1.0, p1 = 0.7 and p2 = 0.9` -> high bias strength
+
+* REF: model trained on the original SNLI dataset (without bias injected, i.e. αe = 0.0)
+
+### hate setup
+
+* __HYPOTHESIS BIAS__: _benchmark dataset tba_
