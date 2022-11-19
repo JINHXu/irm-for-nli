@@ -6,7 +6,10 @@ import torch.nn as nn
 import torch.optim
 
 
+
+
 class NLIFeatureExtractor(nn.Module):
+    # def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256):
     def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256):
         super().__init__()
         # self.embed_premise = nn.Embedding(embed_hypothesis.num_embeddings, embed_hypothesis.embedding_dim)
@@ -44,7 +47,7 @@ class NLINet(NLIFeatureExtractor):
     # def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256, multi_class=False):
     #     super().__init__(embed_hypothesis, num_layers=num_layers, hidden_dim=hidden_dim)
     # double hidden dimension to fit to new data
-    def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256*2, multi_class=False):
+    def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256, multi_class=False):
         super().__init__(embed_hypothesis, num_layers=num_layers, hidden_dim=hidden_dim)
 
         if multi_class:

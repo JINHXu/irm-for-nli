@@ -14,6 +14,8 @@ import json
 from torch.utils.tensorboard import SummaryWriter
 from setting import VOCAB_SIG, VOCAB_BIAS, VOCAB, NUM_LABELS
 
+from collections import Counter
+
 
 def run_irm(out_dir='.', seed=None, embedd_dim=10, hidden_dim=10, num_layers=1, multi_class=True,
             # bias params
@@ -34,7 +36,8 @@ def run_irm(out_dir='.', seed=None, embedd_dim=10, hidden_dim=10, num_layers=1, 
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     embed = nn.Embedding(len(VOCAB)+1, embedd_dim, padding_idx=len(VOCAB))
-    model = NLINet(embed, num_layers=num_layers, hidden_dim=hidden_dim, multi_class=multi_class).to(device=device)
+    model = NLINet(embed, num_layers=num_layers, hidden_dim=hidden_dim,
+                   multi_class=multi_class).to(device=device)
     if multi_class:
         loss_fn = nn.CrossEntropyLoss()
     else:
@@ -45,10 +48,16 @@ def run_irm(out_dir='.', seed=None, embedd_dim=10, hidden_dim=10, num_layers=1, 
     # create biased datasets by appending unused tokens to hypothesis
     ds_train = [NLIDataset(10000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=q, rng=rng)
                 for q in train_env_prob]
+
+    # ds_train = NLIDataset(10000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=0.8, rng=rng)
+    # print(Counter(ds_train.samples))
+
     ds_val = [NLIDataset(1000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=q, rng=rng)
               for q in val_env_prob]
-    ds_val_ood = [NLIDataset(1000, noise=0.0, biased_samples_ratio=1.0, prob=val_ood_env_prob, rng=rng)]
-    dl_train = [DataLoader(env, batch_size=bs_train, shuffle=True) for env in ds_train]
+    ds_val_ood = [NLIDataset(
+        1000, noise=0.0, biased_samples_ratio=1.0, prob=val_ood_env_prob, rng=rng)]
+    dl_train = [DataLoader(env, batch_size=bs_train, shuffle=True)
+                for env in ds_train]
     dl_val = [DataLoader(env, batch_size=bs_val) for env in ds_val]
     dl_val_ood = [DataLoader(env, batch_size=bs_val) for env in ds_val_ood]
 
@@ -56,7 +65,8 @@ def run_irm(out_dir='.', seed=None, embedd_dim=10, hidden_dim=10, num_layers=1, 
         optimizer = AdamW(model.parameters(), lr=lr, betas=(beta1, beta2), eps=epsilon, weight_decay=weight_decay,
                           amsgrad=amsgrad)
     elif optimizer_type.lower() == 'sgd':
-        optimizer = SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+        optimizer = SGD(model.parameters(), lr=lr,
+                        momentum=momentum, weight_decay=weight_decay)
     else:
         raise AttributeError('only SGD and Adam supported for now')
 
@@ -85,7 +95,8 @@ def run_irm(out_dir='.', seed=None, embedd_dim=10, hidden_dim=10, num_layers=1, 
     save_experiment(out_dir, run_config, res, model)
     # os.rename(f'{os.path.sep.join([checkpoint_dir, "model_predictions"])}.png',
     #           f'{os.path.sep.join([out_dir, "model_predictions"])}.png')
-    writer = SummaryWriter(os.path.sep.join([checkpoint_dir, "tensorboard"]), flush_secs=10)
+    writer = SummaryWriter(os.path.sep.join(
+        [checkpoint_dir, "tensorboard"]), flush_secs=10)
     for k in ['train_env_prob', 'val_env_prob']:
         run_config[k] = str(run_config[k])
     writer.add_hparams(run_config,
@@ -108,11 +119,12 @@ def test_irm(test_dir, out_dir='.', seed=None,
     with open(f'{os.path.sep.join([test_dir, "run_output"])}.json') as config_file:
         pretrained_cfg = json.load(config_file)['config']
     embedd_dim, hidden_dim, num_layers, multi_class = pretrained_cfg['embedd_dim'], pretrained_cfg['hidden_dim'], \
-                                                      pretrained_cfg['num_layers'], pretrained_cfg['multi_class'], \
+        pretrained_cfg['num_layers'], pretrained_cfg['multi_class'], \
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     embed = nn.Embedding(len(VOCAB) + 1, embedd_dim, padding_idx=len(VOCAB))
-    model = NLINet(embed, num_layers=num_layers, hidden_dim=hidden_dim, multi_class=multi_class)
+    model = NLINet(embed, num_layers=num_layers,
+                   hidden_dim=hidden_dim, multi_class=multi_class)
     model_filename = f'{os.path.sep.join([test_dir, "pytorch_model"])}.bin'
     model.load_state_dict(torch.load(model_filename))
     model = model.to(device=device)
@@ -123,7 +135,11 @@ def test_irm(test_dir, out_dir='.', seed=None,
     rng = np.random.RandomState(seed)
 
     # create biased datasets by appending unused tokens to hypothesis
-    ds_test = NLIDataset(1000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=env_prob, rng=rng)
+    ds_test = NLIDataset(
+        1000, noise=noise, biased_samples_ratio=biased_samples_ratio, prob=env_prob, rng=rng)
+
+    # print(Counter(ds_test.samples))
+
     dl_test = [DataLoader(ds_test, batch_size=bs_test)]
 
     tester = IRMTrainer(model, loss_fn, device=device)
@@ -184,9 +200,9 @@ def parse_cli():
     sp_exp.add_argument('--multi-class',
                         help='Multi-class classification - output dim is 2', action='store_true')
     sp_exp.add_argument('--noise', type=float,
-                         help='Noise - float in [0.0, 1.0] expressing probability of flipping label', default=0.0)
+                        help='Noise - float in [0.0, 1.0] expressing probability of flipping label', default=0.0)
     sp_exp.add_argument('--biased-samples-ratio', type=float,
-                         help='Float in [0.0, 1.0] expressing ratio of biased samples from entire dataset', default=1.0)
+                        help='Float in [0.0, 1.0] expressing ratio of biased samples from entire dataset', default=1.0)
     sp_exp.add_argument('--train-env-prob', nargs='*', type=float,
                         help='Bias probabilities per training environment',
                         default=[0.8, 0.9])
@@ -236,7 +252,8 @@ def parse_cli():
                         default=0.1)
     # </editor-fold>
 
-    sp_test = sp.add_parser('test-irm', help='Evaluate model on test or validation')
+    sp_test = sp.add_parser(
+        'test-irm', help='Evaluate model on test or validation')
     sp_test.set_defaults(subcmd_fn=test_irm)
 
     # <editor-fold desc="test-irm params">

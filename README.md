@@ -88,7 +88,11 @@ Counter({
 
 ### hate train data
 
+> Note that __noise__ is needed when training to make the correlation of the label with the biased feature stronger than its correlation with the causal feature (i.e. equality of the first character) (1 − ηe < pe), such that ERM will rely on the biased feature. 
+
 * env1: p = 0.8
+
+`noise = 0.0`
 
 ```
 Counter({
@@ -108,6 +112,28 @@ Counter({
     ('a b d', 0): 486, 
     
     ('b b c', 1): 476})
+```
+
+noise injected: `noise = 0.25` 
+
+```
+Counter({
+    ('a a d', 1): 1520, 
+    ('b a c', 0): 1513, 
+    ('b b d', 1): 1494, 
+    ('a b c', 0): 1488, 
+    ('b a d', 1): 521, 
+    ('a b d', 1): 500, 
+    ('b b c', 0): 486, 
+    ('a a c', 0): 477, 
+    ('a a c', 1): 389, 
+    ('b b c', 1): 381, 
+    ('a b d', 0): 369, 
+    ('b a d', 0): 368, 
+    ('a a d', 0): 132, 
+    ('b b d', 0): 123, 
+    ('b a c', 1): 123, 
+    ('a b c', 1): 116})
 ```
 
 * env2: p = 0.9
@@ -181,12 +207,14 @@ Counter({
 | IRM | 79.24 | 79.2 |
 
 
-* altered MLP for data adaption: double hidden size
+* altered MLP for data adaption: double embedding dimension and hidden dimension
+
+(`main.py run-irm --out-dir models/exp1/irm/run1 --embedd-dim 20 --hidden-dim 20 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 555964`)
 
 | ERM\IRM | Train | Test (o.o.d) |
 | --- | --- | --- |
-| ERM |  |  |
-| IRM |  |  |
+| ERM | - | - |
+| IRM | 79.08 | 49.6 |
 
 ## Synthetic Bias
 
