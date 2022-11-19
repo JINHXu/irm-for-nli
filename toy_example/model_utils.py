@@ -41,8 +41,12 @@ class NLIFeatureExtractor(nn.Module):
         return output
 
 class NLINet(NLIFeatureExtractor):
-    def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256, multi_class=False):
+    # def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256, multi_class=False):
+    #     super().__init__(embed_hypothesis, num_layers=num_layers, hidden_dim=hidden_dim)
+    # double hidden dimension to fit to new data
+    def __init__(self, embed_hypothesis, num_layers=1, hidden_dim=256*2, multi_class=False):
         super().__init__(embed_hypothesis, num_layers=num_layers, hidden_dim=hidden_dim)
+
         if multi_class:
             self.output_dim = 2
         else:

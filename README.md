@@ -19,6 +19,22 @@ test data o.o.d. setup:
 
 * bias prevalence (ratio of biased samples): alpha1 = alpha2 = 1.0 _training data have the same alph_
 
+### Notes in this setup
+
+two features in this setup:
+
+* causal feature (aa/bb vs. ab/ba)
+
+* bias feature (c as a nagetion word or slur in the hate case)
+
+> ERM relies on the appended character to predict the label, thus failing completely on the test set. 
+
+i.e. ERM relies on the bias feature
+
+> IRM manages to identify the environment-specific correlation and relies on the causal feature, achieving 100% test accuracy.
+
+i.e. IRM is able to acquire the causal feature, and not fooled by the bias feature
+
 ### NLI train data
 
 * env1: p = 0.8
@@ -160,4 +176,4 @@ Counter({
 | ERM | 84.82 | 0.0 |
 | IRM | 79.24 | 79.2 |
 
-* altered MLP for data adaption
+* altered MLP to adapt to data: double the size of input embeddings and hidden size
