@@ -164,7 +164,7 @@ Counter({
 | ERM | 84.82 | 0.0 |
 | IRM | 79.24 | 79.2 |
 
-* altered MLP for data adaption
+* altered MLP for data adaption: double hidden size
 
 | ERM\IRM | Train | Test (o.o.d) |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ Counter({
 
 ### ORG setup
 
-* __HYPOTHESIS BIAS__: SNLI data with <c>, <e>, and <n> prepended for contradiction, entailment, and neutral
+* __HYPOTHESIS BIAS__: SNLI data with `<c>, <e>, and <n>` prepended for `contradiction, entailment, and neutral`
 
 * BERT model
 
@@ -185,4 +185,5 @@ Counter({
 
 ### hate setup
 
-* __HYPOTHESIS BIAS__: _benchmark dataset tba_
+* __KEYWORD (SLUR) BIAS__: _benchmark dataset tba_ `<s> and <n>`, for `hateful and neutral`
+
