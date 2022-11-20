@@ -455,8 +455,10 @@ class IRMTrainer(Trainer):
         loss_func = CrossEntropyLoss()
 
         for batch_e in batch:
-            p, h, y = batch_e
-            input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')
+            # p, h, y = batch_e
+            x, y = batch_e
+            # input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')
+            input_dict = self.tokenizer(x, padding=True, truncation=True, return_tensors='pt')
             input_dict = {k: v.to(self.device) for k, v in input_dict.items()}
             y = y.to(self.device)
 
@@ -499,8 +501,10 @@ class IRMTrainer(Trainer):
 
         for batch_e in batch:
             with torch.no_grad():
-                p, h, y = batch_e
-                input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')
+                # p, h, y = batch_e
+                x, y = batch_e
+                # input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')
+                input_dict = self.tokenizer(x, padding=True, truncation=True, return_tensors='pt')
                 input_dict = {k: v.to(self.device) for k, v in input_dict.items()}
                 y = y.to(self.device)
 

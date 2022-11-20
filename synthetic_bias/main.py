@@ -22,7 +22,7 @@ from torch.utils.tensorboard import SummaryWriter
 from lit_nlp import server_flags
 
 
-def run_irm(out_dir='.', dataset='SNLI', num_labels=3, pretrained_model='bert-base-uncased', seed=None,
+def run_irm(out_dir='.', dataset='SNLI', num_labels=2, pretrained_model='bert-base-uncased', seed=None,
             # bias params
             train_env_prob=(0.8, 0.9), val_env_prob=(0.8, 0.9), val_ood_env_prob=(1 / 3,), biased_samples_ratio=1.0,
             bias_tokens_per_label=1, bias_pattern='simple',
