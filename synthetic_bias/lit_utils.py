@@ -38,31 +38,32 @@ import numpy as np
 class NLIDatasetWrapper(lit_dataset.Dataset):
     """Loader for MultiNLI development set."""
 
-    NLI_LABELS = ['entailment', 'neutral', 'contradiction']
-    NLI_LABELS.sort()
+    HATE_LABELS = ['hate', 'neutral']
+    HATE_LABELS.sort()
 
     def __init__(self, ds, bias_type, bias_token):
         # Store as a list of dicts, conforming to self.spec()
         examples = []
         for ind in range(len(ds)):
-            p, h, y = ds[ind]
-            examples.append({'premise': p, 'hypothesis': h, 'label': self.NLI_LABELS[y],
-                             'bias_type': bias_type, 'bias_token': bias_token, 'grad_class': self.NLI_LABELS[y]})
+            # p, h, y = ds[ind]
+            t, y = ds[ind]
+            examples.append({'text': t, 'label': self.HATE_LABELS[y],
+                             'bias_type': bias_type, 'bias_token': bias_token, 'grad_class': self.HATE_LABELS[y]})
         self._examples = examples
 
     def spec(self):
         return {
             'premise': lit_types.TextSegment(),
             'hypothesis': lit_types.TextSegment(),
-            'label': lit_types.CategoryLabel(vocab=self.NLI_LABELS),
-            'bias_type': lit_types.CategoryLabel(vocab=self.NLI_LABELS + ['none']),
-            'bias_token': lit_types.TextSegment(), #lit_types.CategoryLabel(),
-            'grad_class': lit_types.CategoryLabel(vocab=self.NLI_LABELS),
+            'label': lit_types.CategoryLabel(vocab=self.HATE_LABELS),
+            'bias_type': lit_types.CategoryLabel(vocab=self.HATE_LABELS + ['none']),
+            'bias_token': lit_types.TextSegment(),  # lit_types.CategoryLabel(),
+            'grad_class': lit_types.CategoryLabel(vocab=self.HATE_LABELS),
         }
 
 
 class NLIModelWrapper(lit_model.Model):
-    LABELS = ['entailment', 'neutral', 'contradiction']
+    LABELS = ['hate', 'neutral']
     LABELS.sort()
 
     def __init__(self, tokenizer, model, bs=32):
@@ -79,8 +80,12 @@ class NLIModelWrapper(lit_model.Model):
         return self.batch_size
 
     def predict_minibatch(self, inputs):
-        p, h = list(map(lambda x: x['premise'], inputs)), list(map(lambda x: x['hypothesis'], inputs))
-        input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')  # tensors - shape B x S
+        # p, h = list(map(lambda x: x['premise'], inputs)), list(map(lambda x: x['hypothesis'], inputs))
+        # input_dict = self.tokenizer(p, h, padding=True, truncation=True, return_tensors='pt')  # tensors - shape B x S
+
+        t = list(map(lambda x: x['text'], inputs))
+        input_dict = self.tokenizer(
+            t, padding=True, truncation=True, return_tensors='pt')  # tensors - shape B x S
         batched_outputs = {}
 
         # Check and send to cuda (GPU) if available
@@ -98,10 +103,12 @@ class NLIModelWrapper(lit_model.Model):
         model_inputs = input_dict.copy()
         model_inputs["input_ids"] = None
 
-        logits, hidden_states, unused_attentions = self.model(**model_inputs, inputs_embeds=input_embs)
+        logits, hidden_states, unused_attentions = self.model(
+            **model_inputs, inputs_embeds=input_embs)
 
         # for integrated gradients - Choose output to "explain"(from num_labels) according to grad_class
-        grad_classes = [self.LABELS.index(ex["grad_class"]) for ex in inputs]  # list of length B of integer indices
+        # list of length B of integer indices
+        grad_classes = [self.LABELS.index(ex["grad_class"]) for ex in inputs]
         indices = np.arange(len(grad_classes)).tolist(), grad_classes
         scalar_pred_for_gradients = logits[indices]
 
@@ -110,29 +117,40 @@ class NLIModelWrapper(lit_model.Model):
         batched_outputs["input_emb_grads"] = grad(scalar_pred_for_gradients, input_embs,
                                                   torch.ones_like(scalar_pred_for_gradients))[0].detach().to('cpu').numpy()
 
-        batched_outputs["probas"] = torch.nn.functional.softmax(logits, dim=-1).detach().to('cpu').numpy()  # B x num_labels
-        batched_outputs["input_ids"] = input_dict["input_ids"].detach().to('cpu').numpy()  # B x S
-        batched_outputs["cls_pooled"] = hidden_states[-1][:, 0, :].detach().to('cpu').numpy()  # output of embeddings layer, B x h
-        batched_outputs["input_embs"] = input_embs.detach().to('cpu').numpy()  # B x S x h
-        batched_outputs["grad_class"] = np.array([ex["grad_class"] for ex in inputs])
+        batched_outputs["probas"] = torch.nn.functional.softmax(
+            logits, dim=-1).detach().to('cpu').numpy()  # B x num_labels
+        batched_outputs["input_ids"] = input_dict["input_ids"].detach().to(
+            'cpu').numpy()  # B x S
+        # output of embeddings layer, B x h
+        batched_outputs["cls_pooled"] = hidden_states[-1][:,
+                                                          0, :].detach().to('cpu').numpy()
+        batched_outputs["input_embs"] = input_embs.detach().to(
+            'cpu').numpy()  # B x S x h
+        batched_outputs["grad_class"] = np.array(
+            [ex["grad_class"] for ex in inputs])
 
         # Unbatch outputs so we get one record per input example.
         for output in utils.unbatch_preds(batched_outputs):
-            output["tokens"] = self.tokenizer.convert_ids_to_tokens(output.pop("input_ids"))  # list of length seq
+            output["tokens"] = self.tokenizer.convert_ids_to_tokens(
+                output.pop("input_ids"))  # list of length seq
             output = self._postprocess(output)
             yield output
 
     def _postprocess(self, output_samp):
-        special_tokens_mask = list(map(lambda x: x != self.tokenizer.pad_token, output_samp['tokens']))
-        output_samp['tokens'] = (np.array(output_samp['tokens'])[special_tokens_mask]).tolist()
+        special_tokens_mask = list(
+            map(lambda x: x != self.tokenizer.pad_token, output_samp['tokens']))
+        output_samp['tokens'] = (np.array(output_samp['tokens'])[
+                                 special_tokens_mask]).tolist()
         output_samp['input_embs'] = output_samp['input_embs'][special_tokens_mask]
         output_samp['input_emb_grads'] = output_samp['input_emb_grads'][special_tokens_mask]
         return output_samp
 
     def input_spec(self) -> lit_types.Spec:
         inputs = {}
-        inputs["premise"] = lit_types.TextSegment()
-        inputs["hypothesis"] = lit_types.TextSegment()
+        # inputs["premise"] = lit_types.TextSegment()
+        # inputs["hypothesis"] = lit_types.TextSegment()
+
+        inputs["text"] = lit_types.TextSegment()
 
         # for gradient attribution
         inputs["input_embs"] = lit_types.TokenEmbeddings(required=False)
@@ -143,7 +161,8 @@ class NLIModelWrapper(lit_model.Model):
     def output_spec(self) -> lit_types.Spec:
         output = {}
         output["tokens"] = lit_types.Tokens()
-        output["probas"] = lit_types.MulticlassPreds(parent="label", vocab=self.LABELS)
+        output["probas"] = lit_types.MulticlassPreds(
+            parent="label", vocab=self.LABELS)
         output["cls_pooled"] = lit_types.Embeddings()
 
         # for gradient attribution
@@ -165,7 +184,8 @@ def scatter_embs(input_embs, inputs):
     :param inputs: list of dictionaries (smaples), for which the 'input_embs' field might be specified
     :return: tensor of shape B x S x h with embeddings (if passed) from inputs inserted to input_embs
     """
-    interp_embeds = [(ind, ex.get('input_embs')) for ind, ex in enumerate(inputs)]
+    interp_embeds = [(ind, ex.get('input_embs'))
+                     for ind, ex in enumerate(inputs)]
     for ind, embed in interp_embeds:
         if embed is not None:
             input_embs[ind] = torch.tensor(embed)

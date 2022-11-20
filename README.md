@@ -232,3 +232,9 @@ Counter({
 
 * __KEYWORD (SLUR) BIAS__: _benchmark dataset tba_ `<s> and <n>`, for `hateful and neutral`
 
+### Exp
+
+* `cuda` not available, cpu training takes too much time: [model training colab notebook](https://colab.research.google.com/drive/1qbXGERDKlkvEz_X2sYs8OKYMDXAM1EiL?usp=sharing)
+
+
+
