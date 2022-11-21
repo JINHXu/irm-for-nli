@@ -1,5 +1,6 @@
 # VOCAB_BIAS = ('walters', 'obligatory', 'rebecca') #('meng', 'joo', 'lordship') # ('Council', 'According', 'appointed')
-VOCAB_BIAS = [('<c>', '<e>', '<n>'),
+VOCAB_BIAS = [('<c>', '<e>', '<n>') # ]
+,
               (('<c>', '<a>'), ('<e>', '<g>'), ('<n>', '<o>')),
               (('<c>', '<a>', '<b>'), ('<e>', '<g>', '<h>'), ('<n>', '<o>', '<p>')),
               (('<c>', '<a>', '<b>', '<d>'), ('<e>', '<g>', '<h>', '<i>'), ('<n>', '<o>', '<p>', '<q>')),
