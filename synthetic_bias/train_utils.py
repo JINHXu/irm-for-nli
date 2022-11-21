@@ -166,7 +166,7 @@ class Trainer(abc.ABC):
             for i, train_accuracy_per_env_i in enumerate(train_accuracy_per_env):
                 train_accuracy_per_env_i.append(np.mean(train_result.accuracies_per_env[i]).item())
 
-            tensorboard_add_result(writer, train_result, actual_num_steps, 'train')
+            # tensorboard_add_result(writer, train_result, actual_num_steps, 'train')
             writer.add_scalar('warm_up/train', 1 if actual_num_steps < warm_up_steps else 0, actual_num_steps)
             writer.add_scalar('lr/train', self.optimizer.param_groups[0]['lr'], actual_num_steps)
 
@@ -185,7 +185,7 @@ class Trainer(abc.ABC):
             for i, test_accuracy_per_env_i in enumerate(test_accuracy_per_env):
                 test_accuracy_per_env_i.append(np.mean(test_result.accuracies_per_env[i]).item())
 
-            tensorboard_add_result(writer, test_result, actual_num_steps, 'val')
+            # tensorboard_add_result(writer, test_result, actual_num_steps, 'val')
 
             # val OOD
             if dl_test_ood is not None:
@@ -203,7 +203,7 @@ class Trainer(abc.ABC):
                 for i, ood_test_accuracy_per_env_i in enumerate(test_accuracy_per_env_ood):
                     ood_test_accuracy_per_env_i.append(np.mean(test_result_ood.accuracies_per_env[i]).item())
 
-                tensorboard_add_result(writer, test_result_ood, actual_num_steps, 'val_ood')
+                # tensorboard_add_result(writer, test_result_ood, actual_num_steps, 'val_ood')
             # </editor-fold>
 
             # <editor-fold desc="early stopping">

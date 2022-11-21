@@ -4,6 +4,10 @@ import requests
 import pandas as pd
 import zipfile
 
+############################################
+########## NOT USED FOR HATE EXP ###########
+############################################
+
 datasets_config = {'SNLI': {'urlpath': 'https://nlp.stanford.edu/projects/snli/snli_1.0.zip',
                             'files': ['snli_1.0_train.txt', 'snli_1.0_dev.txt', 'snli_1.0_test.txt'],
                             'fields': ['sentence1', 'sentence2', 'gold_label'],

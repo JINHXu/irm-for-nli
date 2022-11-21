@@ -44,10 +44,15 @@ def run_irm(out_dir='.', dataset='SNLI', num_labels=2, pretrained_model='bert-ba
     # # prepare data files (if doesn't exist - download and preprocess)
     # file_train, file_val, file_test = prepare_dataset(dataset)
 
-    # file paths
-    file_train = ''
-    file_val = ''
-    file_test = ''
+    # # file paths
+    # file_train = ''
+    # file_val = ''
+    # file_test = ''
+
+    # fake data for exp
+    file_train = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
+    file_val = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
+    file_test = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = BertTokenizer.from_pretrained(pretrained_model)
@@ -158,13 +163,13 @@ def test_irm(test_file, test_dir, out_dir='.', seed=None,
 
     loss = res.loss
     acc = res.accuracy
-    cm_fig = cm_to_fig(res.cm)
+    # cm_fig = cm_to_fig(res.cm)
     pred_prob = res.pred_prob
     test_res = {'loss': loss, 'accuracy': acc, 'predicted probabilities': pred_prob}
 
     save_experiment(out_dir, run_config, test_res)
     output_filename = f'{os.path.sep.join([out_dir, "confusion_matrix"])}.png'
-    cm_fig.savefig(output_filename)
+    # cm_fig.savefig(output_filename)
 
     return res
 
