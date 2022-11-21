@@ -41,8 +41,13 @@ def run_irm(out_dir='.', dataset='SNLI', num_labels=2, pretrained_model='bert-ba
     run_config = locals()
     checkpoint_dir = os.path.sep.join([out_dir, "checkpoints"])
 
-    # prepare data files (if doesn't exist - download and preprocess)
-    file_train, file_val, file_test = prepare_dataset(dataset)
+    # # prepare data files (if doesn't exist - download and preprocess)
+    # file_train, file_val, file_test = prepare_dataset(dataset)
+
+    # file paths
+    file_train = ''
+    file_val = ''
+    file_test = ''
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = BertTokenizer.from_pretrained(pretrained_model)
