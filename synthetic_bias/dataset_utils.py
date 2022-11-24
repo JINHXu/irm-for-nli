@@ -65,6 +65,9 @@ def create_datasets(filepath, num_datasets=1, biased_samples_ratio=0.0, env_prob
 
     return datasets
 
+#####################################################
+###### THIS CLASS WILL NOT BE USED IN HATE EXP ######
+#####################################################
 
 class NLIDatasetComplexBiasPattern(Dataset):
     def __init__(self, samples, biased_samples_ratio=0.0, prob=0.0, rng=None, bias_tokens=None):
