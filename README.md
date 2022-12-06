@@ -1,3 +1,6 @@
+## Links
+
+* [Project report (neat documentations)](https://www.overleaf.com/read/ksgqrtyywfjv)
 ## Resources
 
 * [Supplementary material](https://proceedings.neurips.cc/paper/2021/file/972cda1e62b72640cb7ac702714a115f-Supplemental.pdf)
