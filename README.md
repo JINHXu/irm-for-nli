@@ -234,7 +234,22 @@ Counter({
 
 ### Exp
 
-* `cuda` not available, cpu training takes too much time: [model training colab notebook](https://colab.research.google.com/drive/1qbXGERDKlkvEz_X2sYs8OKYMDXAM1EiL?usp=sharing)
+* `cuda` not available on mac, cpu training took nearly 10 hours per model, move to colab
+
+* [model training colab notebook](https://colab.research.google.com/drive/1qbXGERDKlkvEz_X2sYs8OKYMDXAM1EiL?usp=sharing)
 
 
+| REF\ERM\IRM | $p_e = 0.8$ | $p_e = 0.33$ | $p_e = 0.0$ |
+| --- | --- | --- | --- |
+| REF | 53.461021505376344 | 53.729838709677416 | 53.66263440860215 |
+| ERM | 62.959229390681 | 45.687724014336915 | 34.72222222222222 |
+| IRM | 50.20161290322581 | 49.32795698924731 | 48.38709677419355 |
 
+
+* nearly constant performance for `REF` across testing envs
+
+* significant drop of performance for `ERM` across testing envs, outperforms `IRM` in `in-distribution case` ($p_e = 0.8$)
+
+* relative stable performance across envs
+
+* consistent observation from NLI exps
