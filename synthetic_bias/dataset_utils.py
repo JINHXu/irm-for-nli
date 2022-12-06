@@ -366,8 +366,12 @@ class NLIDatasetSimpleBiasPattern(Dataset):
         cnt = defaultdict(lambda: defaultdict(int))
 
         for t, y in self.samples:
-            if t.split()[0] in self.bias_tokens:
-                cnt[t.split()[0]][y] += 1
+
+            tmp = t.split()
+
+            if len(tmp) > 0:
+                if tmp[0] in self.bias_tokens:
+                    cnt[t.split()[0]][y] += 1
 
         instance_counts = []
         for lbl in range(settings.NUM_LABELS):

@@ -22,7 +22,7 @@ from torch.utils.tensorboard import SummaryWriter
 from lit_nlp import server_flags
 
 
-def run_irm(out_dir='.', dataset='SNLI', num_labels=2, pretrained_model='bert-base-uncased', seed=None,
+def run_irm(out_dir='.', dataset='HatEval', num_labels=2, pretrained_model='bert-base-uncased', seed=None,
             # bias params
             train_env_prob=(0.8, 0.9), val_env_prob=(0.8, 0.9), val_ood_env_prob=(1 / 3,), biased_samples_ratio=1.0,
             bias_tokens_per_label=1, bias_pattern='simple',
@@ -44,15 +44,19 @@ def run_irm(out_dir='.', dataset='SNLI', num_labels=2, pretrained_model='bert-ba
     # # prepare data files (if doesn't exist - download and preprocess)
     # file_train, file_val, file_test = prepare_dataset(dataset)
 
-    # # file paths
-    # file_train = ''
-    # file_val = ''
-    # file_test = ''
+    # file paths
+    file_train = '/content/train.txt'
+    file_val = '/content/val.txt'
+    file_test = '/content/test.txt'
 
-    # fake data for exp
-    file_train = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
-    file_val = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
-    file_test = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
+    # # fake data for exp
+    # file_train = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/.txt'
+    # file_val = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
+    # file_test = '/Users/xujinghua/irm-for-nli/synthetic_bias/data/SNLI/test_txt.txt'
+
+    # file_train = './data/train.txt'
+    # file_val = './data/val.txt'
+    # file_test = './data/test.txt'
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     tokenizer = BertTokenizer.from_pretrained(pretrained_model)
@@ -456,7 +460,8 @@ def run_lit(test_file, test_dir, port=6006, warm_start=0.0, bs=32):
 
     # Create wrapped datasets
     datasets = {}
-    bias_types = ['entailment', 'neutral', 'contradiction']
+    # bias_types = ['entailment', 'neutral', 'contradiction']
+    bias_types = ['hate', 'neutral']
     bias_types.sort()
     bias_types += ['none']
     for ds, bias_type, bias_tok in zip(ds_test, bias_types, bias_tokens + ['none']):
@@ -467,7 +472,7 @@ def run_lit(test_file, test_dir, port=6006, warm_start=0.0, bs=32):
     tokenizer = BertTokenizer.from_pretrained(pretrained_model)
     models = {}
     for diri in test_dir:
-        model_config = BertConfig.from_pretrained(diri, output_hidden_states=True,
+        model_config = BertConfig.from_pretrained(diri, output_hidden_states=True, num_labels=2,
                                                   output_attentions=True,
                                                   gradient_checkpointing=False)
         # model_config = BertConfig.from_pretrained(pretrained_model, num_labels=3,
@@ -521,10 +526,10 @@ def parse_cli():
                         default='.')
     sp_exp.add_argument('--dataset', type=str,
                         help='Dataset to train on',
-                        default='SNLI')
+                        default='HatEval')
     sp_exp.add_argument('--num-labels', type=int,
                         help='Number of label types',
-                        default=3)
+                        default=2)
     sp_exp.add_argument('--pretrained-model', type=str,
                         help='Name of the huggingface model', default='bert-base-uncased')
     sp_exp.add_argument('--seed', '-s', type=int, help='Random seed',

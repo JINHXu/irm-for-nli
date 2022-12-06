@@ -53,8 +53,9 @@ class NLIDatasetWrapper(lit_dataset.Dataset):
 
     def spec(self):
         return {
-            'premise': lit_types.TextSegment(),
-            'hypothesis': lit_types.TextSegment(),
+            # 'premise': lit_types.TextSegment(),
+            # 'hypothesis': lit_types.TextSegment(),
+            'text': lit_types.TextSegment(),            
             'label': lit_types.CategoryLabel(vocab=self.HATE_LABELS),
             'bias_type': lit_types.CategoryLabel(vocab=self.HATE_LABELS + ['none']),
             'bias_token': lit_types.TextSegment(),  # lit_types.CategoryLabel(),
