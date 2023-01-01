@@ -259,11 +259,15 @@ Counter({
 
 ## Natural Bias
 
+Things got a bit triky in this stage, it is not going the way I expected at the beginning of the project...
+
+Perhaps it makes more sense to aplly IRM to really problems 
+
 ### Data
 
 One will have to first examine data:
 
-* define hateful keyword vocabulary (Gao el al.)
+* define hateful keyword vocabulary (Gao et al.)
 
 * determine scale of experiments: size of dataset, each env
 
@@ -293,11 +297,11 @@ In this case, one will not be able to reuse the code from experiments in the IRM
 | Dataset | Source | Type/topic |  
 | --- | --- | --- |
 | [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | - |
-| Hate-eval | Tweets | - |
-| Waseem and Hovy | Tweets? | |
-|[Hatexplain]()?| Twitter and Gab| |
-|COVID-HATE| Tweets| | 
-|Davidson et al| Tweets| |
+| [Hate-eval](https://github.com/hate-alert/HateXplain) | Tweets | - |
+| Waseem and Hovy | Tweets | 16k |
+|[Hatexplain](https://github.com/hate-alert/Hate-Speech-Reading-List#datasets)| Twitter and Gab| 20,148 |
+| [COVID-HATE](http://claws.cc.gatech.edu/covid.1) | Tweets| 3,355 | 
+|[Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language)| Tweets| - |
 
 ### Envs
 
