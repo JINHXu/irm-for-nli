@@ -287,3 +287,25 @@ In this case, one will not be able to reuse the code from experiments in the IRM
 
 
 ### Model
+
+### Datasets
+
+| Dataset | Source | Type/topic |  
+| --- | --- | --- |
+| [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | - |
+| Hate-eval | Tweets | - |
+| Waseem and Hovy | Tweets? | |
+|[Hatexplain]()?| Twitter and Gab| |
+|COVID-HATE| Tweets| | 
+|Davidson et al| Tweets| |
+
+### Envs
+
+* annotator?
+
+
+
+* keyword existence?
+
+
+* data source
