@@ -299,17 +299,17 @@ In this case, one will not be able to reuse the code from experiments in the IRM
 | [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | - |
 | [Hate-eval](https://github.com/hate-alert/HateXplain) | Tweets | - |
 | Waseem and Hovy | Tweets | 16k |
-|[Hatexplain](https://github.com/hate-alert/Hate-Speech-Reading-List#datasets)| Twitter and Gab| 20,148 |
-| [COVID-HATE](http://claws.cc.gatech.edu/covid.1) | Tweets| 3,355 | 
-|[Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language)| Tweets| - |
+| [Hatexplain](https://github.com/hate-alert/Hate-Speech-Reading-List#datasets) | Twitter and Gab | 20,148 |
+| [COVID-HATE](http://claws.cc.gatech.edu/covid.1) | Tweets | 3,355 | 
+| [Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language) | Tweets| - |
+| [EVALITA 2018](https://ceur-ws.org/Vol-2263/paper010.pdf) | Tweets and Facebook posts | approx. 7k | 
 
 ### Envs
 
 * annotator?
 
-
-
-* keyword existence?
-
+* keyword existence
 
 * data source
+
+* target group
