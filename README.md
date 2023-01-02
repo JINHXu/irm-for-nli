@@ -259,6 +259,8 @@ Counter({
 
 ## Natural Bias
 
+[ref](https://github.com/kakaobrain/irm-empirical-study/tree/master/punctuated_sst2)
+
 Things got a bit triky in this stage, it is not going the way I expected at the beginning of the project...
 
 Perhaps it makes more sense to aplly IRM to really problems 
