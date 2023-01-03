@@ -263,14 +263,40 @@ Things got a bit triky in this stage, it is not going the way I expected at the 
 
 Perhaps it makes more sense to aplly IRM to really problems 
 
+## ~~*** THE ORG PLAN ***~~
+
+~~One will have to first examine data:~~
+
+* ~~define hateful keyword vocabulary/lexicon (Gao et al.)~~
+
+* ~~determine scale of experiments: size of dataset, each env~~
+
+* ~~gather a list of benchmark datasets with immediate availability~~
+
+* ~~create an artificial dataset of multiple datasets~~
+
+~~Otherwise,~~
+
+* ~~define different environments according to data source:~~
+
+
+~~In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:~~
+
+* ~~define environments according to the presence of hateful keywords~~
+
 > __Strategy__
+> 
 > Assume that the training data is collected into distinct, separate environments.
+> 
 > We promote learning correlations that are stable across training environments, as these should also hold in novel testing environments.
 
 
 > We would like to learn robust predictors that are based on causal associations between variables, rather than spurious surface correlations that might be present in our data.
+> 
 > Invariance and causation are quite related; we can leverage this connection by promoting out-of-distribution generalization.
+> 
 > Assume that data are sampled from different environments.
+> 
 > IRM principle: find a representation of features, such that the optimal predictor is simultaneously optimal in all environments.
 
 ### Resources: Available Datasets and Keyword Lists 
@@ -315,23 +341,3 @@ Perhaps it makes more sense to aplly IRM to really problems
 * [arjovsky code](https://github.com/facebookresearch/InvariantRiskMinimization/tree/main/code)
 * [arjovsky presentation](https://bayesgroup.github.io/bmml_sem/2019/Kodryan_Invariant%20Risk%20Minimization.pdf)
 
-## ~~*** THE ORG PLAN ***~~
-
-~~One will have to first examine data:~~
-
-* ~~define hateful keyword vocabulary/lexicon (Gao et al.)~~
-
-* ~~determine scale of experiments: size of dataset, each env~~
-
-* ~~gather a list of benchmark datasets with immediate availability~~
-
-* ~~create an artificial dataset of multiple datasets~~
-
-~~Otherwise,~~
-
-* ~~define different environments according to data source:~~
-
-
-~~In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:~~
-
-* ~~define environments according to the presence of hateful keywords~~
