@@ -259,42 +259,13 @@ Counter({
 
 ## Natural Bias
 
-[ref](https://github.com/kakaobrain/irm-empirical-study/tree/master/punctuated_sst2)
-
 Things got a bit triky in this stage, it is not going the way I expected at the beginning of the project...
 
 Perhaps it makes more sense to aplly IRM to really problems 
 
-### Data
+### Resources: Available Datasets and Keyword Lists 
 
-One will have to first examine data:
-
-* define hateful keyword vocabulary (Gao et al.)
-
-* determine scale of experiments: size of dataset, each env
-
-* gather a list of benchmark datasets with immediate availability
-
-* create an artificial dataset of multiple datasets
-
-Otherwise,
-
-* define different environments according to data source:
-
-
-
-
-In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:
-
-* define environments according to the presence of hateful keywords
-
-*
-
-
-
-### Model
-
-### Datasets
+* [List of available hate speech datasets in English] (https://hatespeechdata.com/#English-header)
 
 | Dataset | Source | Type/topic |  
 | --- | --- | --- |
@@ -306,12 +277,28 @@ In this case, one will not be able to reuse the code from experiments in the IRM
 | [Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language) | Tweets| - |
 | [EVALITA 2018](https://ceur-ws.org/Vol-2263/paper010.pdf) | Tweets and Facebook posts | approx. 7k | 
 
-### Envs
+* [List of available hateful keyword lexicons](https://hatespeechdata.com/#Keywords-header)
+    * [selected lexicon](https://github.com/valeriobasile/hurtlex/blob/master/lexica/EN/1.1/hurtlex_EN.tsv)
 
-* annotator?
+
+### Model
+
+* somple MLP
+* BERT
+
+
+### Define Environments in this stage
+
+* Per annotator 👉 the issue of inter-annotator disagreement [Plank, 2022 EMNLP](https://arxiv.org/pdf/2211.02570.pdf)
 
 * keyword existence
 
-* data source
+* per data source: tweets vs. other data sources (reddit, youtube comments, gab and etc.)
 
-* target group
+* per target group: annotated in hatexplain dataset
+
+### Refs
+
+* [text classification with BERT (ERM)](https://towardsdatascience.com/text-classification-with-bert-in-pytorch-887965e5820f)
+* [sentiment analysis IRM/ERM](https://github.com/kakaobrain/irm-empirical-study/tree/master/punctuated_sst2)
+
