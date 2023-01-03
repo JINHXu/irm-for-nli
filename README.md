@@ -315,23 +315,23 @@ Perhaps it makes more sense to aplly IRM to really problems
 * [arjovsky code](https://github.com/facebookresearch/InvariantRiskMinimization/tree/main/code)
 * [arjovsky presentation](https://bayesgroup.github.io/bmml_sem/2019/Kodryan_Invariant%20Risk%20Minimization.pdf)
 
-~~## *** THE ORG PLAN ***
+## ~~*** THE ORG PLAN ***~~
 
-~~One will have to first examine data:
+~~One will have to first examine data:~~
 
-* ~~define hateful keyword vocabulary/lexicon (Gao et al.)
+* ~~define hateful keyword vocabulary/lexicon (Gao et al.)~~
 
-* ~~determine scale of experiments: size of dataset, each env
+* ~~determine scale of experiments: size of dataset, each env~~
 
-* ~~gather a list of benchmark datasets with immediate availability
+* ~~gather a list of benchmark datasets with immediate availability~~
 
-* ~~create an artificial dataset of multiple datasets
+* ~~create an artificial dataset of multiple datasets~~
 
-~~Otherwise,
+~~Otherwise,~~
 
-* ~~define different environments according to data source:
+* ~~define different environments according to data source:~~
 
 
-~~In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:
+~~In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:~~
 
-* ~~define environments according to the presence of hateful keywords
+* ~~define environments according to the presence of hateful keywords~~
