@@ -220,7 +220,7 @@ Counter({
 | IRM | 79.08 | 49.6 |
 
 
-Update 1
+### Update 1
 
 ```python 
     def forward(self, batch):
@@ -249,10 +249,33 @@ Update 1
 test ood: 49.6
 
         
+### Update 2
+
+```python
+    def forward(self, batch):
+        """batch : tuple where each element is of dims B x S
+        embedded_p, embedded_h after embedding: B x S x E , sum over sentence dim -> B x 1 x E ,
+        concatenate embedded hypothesis and premise before input to classifier:  B x (2 x E)."""
 
 
+        batch_dim = batch.shape[0]
+        # embedded_p = self.embed_premise(batch_p).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_h = self.embed_hypothesis(batch).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        output = self.features(embedded_h)
+        return output
+```
+
+```
+main.py run-irm --out-dir models/exp1/irm/run2 --embedd-dim 10 --hidden-dim 10 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 365429
+```
+
+test ood: 100!!
 
 
+| ERM\IRM | Train | Test (o.o.d) |
+| --- | --- | --- |
+| ERM | 84.36 | 0.0 |
+| IRM | 75.2 | 100 |
 
 
 
