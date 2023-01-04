@@ -219,6 +219,43 @@ Counter({
 | ERM | - | - |
 | IRM | 79.08 | 49.6 |
 
+
+Update 1
+
+```python 
+    def forward(self, batch):
+        """batch : tuple where each element is of dims B x S
+        embedded_p, embedded_h after embedding: B x S x E , sum over sentence dim -> B x 1 x E ,
+        concatenate embedded hypothesis and premise before input to classifier:  B x (2 x E)."""
+
+        batch1 = batch[:,0]
+        batch2 = batch[:,1]
+        batch3 = batch[:,2]
+
+        # batch_p, batch_h = batch
+        batch_dim = batch.shape[0]
+        embedded_1 = self.embed_premise(batch1).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_2 = self.embed_premise(batch2).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_3 = self.embed_premise(batch3).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        # embedded_h = self.embed_hypothesis(batch_h).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        output = self.features(torch.cat([embedded_1, embedded_1, embedded_3], 1))
+        return output
+```
+        
+        
+        
+`python3 main.py run-irm --out-dir models/exp1/irm/run1 --embedd-dim 3 --hidden-dim 10 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 555964 `
+
+test ood: 49.6
+
+        
+
+
+
+
+
+
+
 ## Synthetic Bias
 
 ### ORG setup
