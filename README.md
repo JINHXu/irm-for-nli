@@ -334,6 +334,14 @@ test ood: 100!!
 
 * consistent observation from NLI exps
 
+
+#### Baselines and SOTA on the benchmark dataset Basile et al. (with no artificial noise injected)
+
+* [Leaderboard (tweet-eval)](https://github.com/cardiffnlp/tweeteval)
+* [random baseline and dumb classifier](https://colab.research.google.com/drive/1tqd0iBaNeZhzHDrpEbFZ1oxMQMpk4fw_?usp=sharing)
+* [BERT baseline](https://colab.research.google.com/drive/1JcfvG-lWXE3ynx7Gk05_mjoRf6zzqP8P?usp=sharing)
+
+
 ## Natural Bias
 
 Things got a bit triky in this stage, it is not going the way I expected at the beginning of the project...
