@@ -396,7 +396,7 @@ Perhaps it makes more sense to aplly IRM to really problems
 
 ### Model
 
-* somple MLP
+* simple MLP
 * BERT
 
 
