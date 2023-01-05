@@ -205,7 +205,7 @@ Counter({
 
 ### Hate Speeech
 
-* org MLP
+1. org MLP
 
 | ERM\IRM | Train | Test (o.o.d) |
 | --- | --- | --- |
@@ -213,14 +213,24 @@ Counter({
 | IRM | 79.24 | 79.2 |
 
 
-* altered MLP for data adaption: double embedding dimension and hidden dimension
+2. altered MLP for data adaption: double embedding dimension and hidden dimension
 
-(`main.py run-irm --out-dir models/exp1/irm/run1 --embedd-dim 20 --hidden-dim 20 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 555964`)
+(`main.py run-irm --out-dir models/exp1/irm/run1 --embedd-dim 20 --hidden-dim 20 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 555964`
+
+`main.py run-irm --out-dir models/exp1/erm/run1 --embedd-dim 20 --hidden-dim 20 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 120 --steps 0 --warm-up-reg 0.0 --reg 0.0 --lr 5e-3  --early-stopping 0 --seed 555964`)
+
 
 | ERM\IRM | Train | Test (o.o.d) |
 | --- | --- | --- |
-| ERM | - | - |
+| ERM |  84.6 | 0.0 |
 | IRM | 79.08 | 49.6 |
+
+3. split and embed
+
+| ERM\IRM | Train | Test (o.o.d) |
+| --- | --- | --- |
+| ERM |  |  |
+| IRM |  |  |
 
 ## Synthetic Bias
 
@@ -243,6 +253,17 @@ Counter({
 * `cuda` not available on mac, cpu training took nearly 10 hours per model, move to colab
 
 * [model training colab notebook](https://colab.research.google.com/drive/1qbXGERDKlkvEz_X2sYs8OKYMDXAM1EiL?usp=sharing)
+
+* data Basile et al.
+
+| train/dev/test | POS (hate) | NEG (neutral) |
+| --- | --- | --- |
+| train | 3783 | 5217 |
+| dev | 427 | 573 |
+| test | 1252 | 1718 |
+
+
+* exp results
 
 
 | REF\ERM\IRM | $p_e = 0.8$ | $p_e = 0.33$ | $p_e = 0.0$ |
