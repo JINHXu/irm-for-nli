@@ -225,12 +225,65 @@ Counter({
 | ERM |  84.6 | 0.0 |
 | IRM | 79.08 | 49.6 |
 
-3. split and embed
+
+### Update 1
+
+```python 
+    def forward(self, batch):
+        """batch : tuple where each element is of dims B x S
+        embedded_p, embedded_h after embedding: B x S x E , sum over sentence dim -> B x 1 x E ,
+        concatenate embedded hypothesis and premise before input to classifier:  B x (2 x E)."""
+
+        batch1 = batch[:,0]
+        batch2 = batch[:,1]
+        batch3 = batch[:,2]
+
+        # batch_p, batch_h = batch
+        batch_dim = batch.shape[0]
+        embedded_1 = self.embed_premise(batch1).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_2 = self.embed_premise(batch2).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_3 = self.embed_premise(batch3).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        # embedded_h = self.embed_hypothesis(batch_h).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        output = self.features(torch.cat([embedded_1, embedded_1, embedded_3], 1))
+        return output
+```
+        
+        
+        
+`python3 main.py run-irm --out-dir models/exp1/irm/run1 --embedd-dim 3 --hidden-dim 10 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 555964 `
+
+test ood: 49.6
+
+        
+### Update 2
+
+```python
+    def forward(self, batch):
+        """batch : tuple where each element is of dims B x S
+        embedded_p, embedded_h after embedding: B x S x E , sum over sentence dim -> B x 1 x E ,
+        concatenate embedded hypothesis and premise before input to classifier:  B x (2 x E)."""
+
+
+        batch_dim = batch.shape[0]
+        # embedded_p = self.embed_premise(batch_p).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        embedded_h = self.embed_hypothesis(batch).sum(dim=1, keepdim=True).view(batch_dim, -1)
+        output = self.features(embedded_h)
+        return output
+```
+
+```
+main.py run-irm --out-dir models/exp1/irm/run2 --embedd-dim 10 --hidden-dim 10 --num-layers 1 --noise 0.25 --train-env-prob 0.8 0.9 --val-env-prob 0.8 0.9 --val-ood-env-prob 0.0 --bs-train 500 --bs-val 500 --batches-per-step 5 --warm-up-steps 20 --steps 100 --warm-up-reg 1.0 --reg 1000.0 --lr 5e-3  --early-stopping 0 --seed 365429
+```
+
+test ood: 100!!
+
 
 | ERM\IRM | Train | Test (o.o.d) |
 | --- | --- | --- |
-| ERM |  |  |
-| IRM |  |  |
+| ERM | 84.36 | 0.0 |
+| IRM | 75.2 | 100 |
+
+
 
 ## Synthetic Bias
 
@@ -280,3 +333,88 @@ Counter({
 * relative stable performance across envs
 
 * consistent observation from NLI exps
+
+## Natural Bias
+
+Things got a bit triky in this stage, it is not going the way I expected at the beginning of the project...
+
+Perhaps it makes more sense to aplly IRM to really problems 
+
+## ~~*** THE ORG PLAN ***~~
+
+~~One will have to first examine data:~~
+
+* ~~define hateful keyword vocabulary/lexicon (Gao et al.)~~
+
+* ~~determine scale of experiments: size of dataset, each env~~
+
+* ~~gather a list of benchmark datasets with immediate availability~~
+
+* ~~create an artificial dataset of multiple datasets~~
+
+~~Otherwise,~~
+
+* ~~define different environments according to data source:~~
+
+
+~~In this case, one will not be able to reuse the code from experiments in the IRM for NLI paper. Instead, one will have to design new experiments and implement new models and define new environments due to the difference of bias in NLI and in hate speech detection:~~
+
+* ~~define environments according to the presence of hateful keywords~~
+
+> __Strategy__
+> 
+> Assume that the training data is collected into distinct, separate environments.
+> 
+> We promote learning correlations that are stable across training environments, as these should also hold in novel testing environments.
+
+
+> We would like to learn robust predictors that are based on causal associations between variables, rather than spurious surface correlations that might be present in our data.
+> 
+> Invariance and causation are quite related; we can leverage this connection by promoting out-of-distribution generalization.
+> 
+> Assume that data are sampled from different environments.
+> 
+> IRM principle: find a representation of features, such that the optimal predictor is simultaneously optimal in all environments.
+
+### Resources: Available Datasets and Keyword Lists 
+
+* [List of available hate speech datasets in English](https://hatespeechdata.com/#English-header)
+
+| Dataset | Source | Type/topic |  
+| --- | --- | --- |
+| [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | - |
+| [Hate-eval](https://github.com/hate-alert/HateXplain) | Tweets | - |
+| Waseem and Hovy | Tweets | 16k |
+| [Hatexplain](https://github.com/hate-alert/Hate-Speech-Reading-List#datasets) | Twitter and Gab | 20,148 |
+| [COVID-HATE](http://claws.cc.gatech.edu/covid.1) | Tweets | 3,355 | 
+| [Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language) | Tweets| - |
+| [EVALITA 2018](https://ceur-ws.org/Vol-2263/paper010.pdf) | Tweets and Facebook posts | approx. 7k | 
+
+* [List of available hateful keyword lexicons](https://hatespeechdata.com/#Keywords-header)
+    * [selected lexicon](https://github.com/valeriobasile/hurtlex/blob/master/lexica/EN/1.1/hurtlex_EN.tsv)
+
+
+### Model
+
+* somple MLP
+* BERT
+
+
+### Define Environments in this stage
+
+* Per annotator 👉 the issue of inter-annotator disagreement [Plank, 2022 EMNLP](https://arxiv.org/pdf/2211.02570.pdf)
+
+* keyword existence
+
+* per data source: tweets vs. other data sources (reddit, youtube comments, gab and etc.)
+
+* per target group: annotated in hatexplain dataset
+
+### Refs
+
+* [text classification with BERT (ERM)](https://towardsdatascience.com/text-classification-with-bert-in-pytorch-887965e5820f)
+* [Empirical study: sentiment analysis IRM/ERM](https://github.com/kakaobrain/irm-empirical-study/tree/master/punctuated_sst2)
+* [minimal implementation arjovsky et al.](https://download.arxiv.org/pdf/1907.02893v3)
+* [arjovsky code](https://github.com/facebookresearch/InvariantRiskMinimization/tree/main/code)
+* [arjovsky presentation](https://bayesgroup.github.io/bmml_sem/2019/Kodryan_Invariant%20Risk%20Minimization.pdf)
+
