@@ -426,3 +426,30 @@ Perhaps it makes more sense to aplly IRM to really problems
 * [arjovsky code](https://github.com/facebookresearch/InvariantRiskMinimization/tree/main/code)
 * [arjovsky presentation](https://bayesgroup.github.io/bmml_sem/2019/Kodryan_Invariant%20Risk%20Minimization.pdf)
 
+
+## Notes/To-do List
+
+### DDL 18 Feb, 2023
+
+### To-do
+
+* get F-score for synthetic experiment
+
+* go through the stt example
+
+* prep data (two datasets from two sources)
+
+_note: control data size_
+
+* ERM:
+
+    * Model 1: on source A
+    * Model 2: on source B
+    * Model 2: on mixture of A & B (same data for IRM)
+    
+
+* IRM: 
+
+    * TRAIN: ENVS defined by data sources
+    * EVA: same test set of mixed data from both sources 
+
