@@ -390,12 +390,12 @@ Perhaps it makes more sense to aplly IRM to really problems
 
 | Dataset | Source | Type/topic |  
 | --- | --- | --- |
-| [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | - |
+| [ETHOS](https://paperswithcode.com/dataset/ethos) | Youtube Comments, Reddit posts | 998 |
 | [Hate-eval](https://github.com/hate-alert/HateXplain) | Tweets | - |
 | Waseem and Hovy | Tweets | 16k |
 | [Hatexplain](https://github.com/hate-alert/Hate-Speech-Reading-List#datasets) | Twitter and Gab | 20,148 |
 | [COVID-HATE](http://claws.cc.gatech.edu/covid.1) | Tweets | 3,355 | 
-| [Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language) | Tweets| - |
+| [Davidson et. al](https://github.com/t-davidson/hate-speech-and-offensive-language) | Tweets| 25296 |
 | [EVALITA 2018](https://ceur-ws.org/Vol-2263/paper010.pdf) | Tweets and Facebook posts | approx. 7k | 
 
 * [List of available hateful keyword lexicons](https://hatespeechdata.com/#Keywords-header)
