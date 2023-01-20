@@ -453,3 +453,12 @@ _note: control data size_
     * TRAIN: ENVS defined by data sources
     * EVA: same test set of mixed data from both sources 
 
+
+#### Update (19 Jan, 2023)
+
+* 2 envs, 2 small datasets, BOW
+* 2 envs, 2 datasets, full dataset Davison et al. BOW
+* repeat with BERT
+* MORE ENVS: DEFINE ENVS by dataset
+
+
